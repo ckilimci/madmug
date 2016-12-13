@@ -20,6 +20,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import netifaces
 import subprocess
+from unidecode import unidecode
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -38,10 +39,20 @@ def help(bot, update):
     update.message.reply_text('/start')
     update.message.reply_text('/ip')
     update.message.reply_text('/msg_once')
+    update.message.reply_text('/msg_print')
     update.message.reply_text('/msg_ip')
     update.message.reply_text('/msg')
     update.message.reply_text('/time')
     update.message.reply_text('/stop_all')
+
+def msg_print(bot, update, args):
+    update.message.reply_text("Message will be print [" + " ".join(args) + "]")
+    cmd = path + "print_message.sh"
+    args.insert(0, unidecode(update.message.from_user.first_name))
+    args.insert(0, cmd)
+    subprocess.Popen(args)
+    update.message.reply_text("Done!")
+
 
 def ip(bot, update):
     update.message.reply_text('IP:' + netifaces.ifaddresses("wlan0")[netifaces.AF_INET][0]["addr"])
@@ -51,6 +62,7 @@ def msg_once(bot, update, args):
     #cmd = "/home/pi/Pimoroni/scrollphat/write_message.sh"
     cmd = path + "write_message.sh"
     args.insert(0, cmd)
+    #subprocess.Popen(unidecode(u" ".join(args)))
     subprocess.Popen(args)
     update.message.reply_text("Done!")
 
@@ -104,26 +116,27 @@ def main():
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-
+    
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ip", ip))
     dp.add_handler(CommandHandler("msg_ip", msg_ip))
     dp.add_handler(CommandHandler("msg_once", msg_once, pass_args=True))
+    dp.add_handler(CommandHandler("msg_print", msg_print, pass_args=True))
     dp.add_handler(CommandHandler("msg", msg, pass_args=True))
     dp.add_handler(CommandHandler("time", time))
     dp.add_handler(CommandHandler("stop_all", stop_all))
-
+    
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
-
+    
     # log all errors
     dp.add_error_handler(error)
-
+    
     # Start the Bot
     updater.start_polling()
-
+    
     # Run the bot until the you presses Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
