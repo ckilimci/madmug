@@ -112,11 +112,11 @@ def error(bot, update, error):
 
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater(token)
+    updater = Updater("284912995:AAFPJtU7VhGk_xdNAC0DJVz-F5N-9wkm5iU")
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-    
+
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
@@ -127,16 +127,16 @@ def main():
     dp.add_handler(CommandHandler("msg", msg, pass_args=True))
     dp.add_handler(CommandHandler("time", time))
     dp.add_handler(CommandHandler("stop_all", stop_all))
-    
+
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
-    
+
     # log all errors
     dp.add_error_handler(error)
-    
+
     # Start the Bot
     updater.start_polling()
-    
+
     # Run the bot until the you presses Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
