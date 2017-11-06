@@ -1,4 +1,4 @@
-# Lego Mug with a Thermal Printer and LED scroll display
+# Lego Mug with a Thermal Printer and LED Scroll Display
 
 ![MadMug](https://github.com/ckilimci/madmug/raw/master/media/2016-11-14%2022.13.01.jpg)
 
